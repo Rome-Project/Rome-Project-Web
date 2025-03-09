@@ -6,10 +6,8 @@
     <title>Rome Project</title>
 </head>
 <body>
-    <h1>Hello, World!</h1>
     <?php
         echo "<p>Hello, World!</p>";
     ?>
-    <h2>Hello, World!</h2>
 </body>
 </html>
