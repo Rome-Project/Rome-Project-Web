@@ -1,0 +1,27 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy-testing:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Testing
+        uses: appleboy/ssh-action@master
+        with:
+          host: 178.128.173.36
+          username: deploy
+          key: ${{ secrets.WEB_DEPLOY_KEY }}
+          script: |
+            cd /var/www/Testing
+            git pull origin main
+            sudo systemctl restart apache2
