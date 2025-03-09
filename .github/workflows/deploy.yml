@@ -21,7 +21,9 @@ jobs:
           host: 178.128.173.36
           username: deploy
           key: ${{ secrets.WEB_DEPLOY_KEY }}
+          debug: true
           script: |
             cd /var/www/Testing
-            git pull origin main
+            git fetch origin main
+            git status
             sudo systemctl restart apache2
