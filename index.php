@@ -8,6 +8,7 @@
 <body>
     <?php
         echo "<p>Hello, World!</p>";
+        echo "<p>Firewall test 2</p>";
     ?>
 </body>
 </html>
