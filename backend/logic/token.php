@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     exit;
 }
 
-require_once WEB_ROOT . 'backend/includes/database.php';
+require_once WEB_ROOT . 'backend/includes/Database.php';
 
 $db = new Database();
 $pdo = $db->getConnection();

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once WEB_ROOT . 'backend/includes/database.php';
+require_once WEB_ROOT . 'backend/includes/Database.php';
 
 $db = new Database();
 $pdo = $db->getConnection();

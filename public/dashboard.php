@@ -5,7 +5,7 @@ if (!isset($_SESSION['logged_in'])) {
     exit;
 }
 
-require_once '../backend/includes/database.php';
+require_once '../backend/includes/Database.php';
 
 $db = new Database();
 $pdo = $db->getConnection();
