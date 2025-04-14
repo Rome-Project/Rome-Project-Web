@@ -1,0 +1,346 @@
+/* Base styles */
+:root {
+    --bg-dark: #121826;
+    --bg-light: #1a2234;
+    --accent-blue: #3b82f6;
+    --accent-blue-light: #60a5fa;
+    --text-rome-primary: rgb(244, 158, 30);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border-color: #374151;
+    --success-color: #55e681;
+    --error-color: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+header .header_left .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+header .header_left .logo img {
+    display: block;
+    height: 30px;
+    width: auto;
+    max-height: 30px;
+    max-width: 100px;
+}
+
+header .header_left .logo p {
+    color: var(--text-rome-primary);
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+header .header_left {
+    display: flex;
+    align-items: center;
+}
+
+header .header_right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Body */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 1rem;
+    background-color: var(--bg-light);
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+    text-align: center;
+}
+
+footer p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.footer_links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.footer_link img {
+    height: 24px;
+    width: 24px;
+    transition: opacity 0.2s;
+}
+
+.footer_link:hover img {
+    opacity: 0.8;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 24rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.container_info {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.container_info .title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-rome-primary);
+    margin-bottom: 0.5rem;
+}
+
+.container_info .subtitle {
+    color: var(--text-secondary);
+}
+
+.container .footer_info {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Login Form */
+.login_form {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.login_form .form_content {
+    padding: 1.5rem;
+}
+
+.login_form .form_content .item {
+    margin-bottom: 1rem;
+}
+
+.login_form .form_content .item label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.login_form .form_content .item .input {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+
+.login_form .login_button_div {
+    padding: 1rem 1.5rem 1.5rem;
+}
+
+/* Button */
+.button_primary {
+    display: block;
+    width: 100%;
+    height: 2.5rem;
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button_primary:hover {
+    background-color: var(--accent-blue-light);
+}
+
+.button_primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.button_primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Error & Success */
+.success {
+    color: var(--success-color);
+}
+
+.error {
+    color: var(--error-color);
+}
+
+/* Header Account Dropdown */
+.account_bubble {
+    position: relative;
+}
+
+.account_button {
+    background-color: var(--accent-blue);
+    color: var(--text-primary);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.account_button:hover {
+    background-color: var(--accent-blue-light);
+}
+
+.account_initial {
+    text-transform: uppercase;
+}
+
+.dropdown_menu {
+    position: absolute;
+    right: 0;
+    top: 65px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    min-width: 12rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown_menu.show {
+    display: block;
+}
+
+.dropdown_header {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown_item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown_item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--accent-blue);
+}
+
+.logout_item {
+    color: var(--error-color);
+}
+
+.logout_item:hover {
+    color: #f87171;
+}
+
+/* Dashboard sidebar nav */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: 100%;
+    width: 52px;
+    background-color: var(--bg-light);
+    border-right: 1px solid var(--border-color);
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar_nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.sidebar_menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar_menu-item {
+    margin: 0.25rem 0;
+}
+
+.sidebar_menu_item a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 16px;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.sidebar_menu_item a img {
+    height: 20px;
+    width: 20px;
+}
+
+.sidebar_menu_item a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--accent-blue);
+}

@@ -2,25 +2,30 @@
 <html lang="en">
 <?php
     session_start();
-    if (isset($_SESSION['user_id'])) {
-        header("Location: pages/dashboard.php");
+    if (isset($_SESSION['logged_in'])) {
+        header("Location: dashboard.php");
         exit;
     }
+    
     $error = $_SESSION['login_error'] ?? '';
     unset($_SESSION['login_error']);
 
     include_once 'components/head.php';
 ?>
+
 <body class="bg-dark">
-    <?php include_once 'components/header.php';?>
     <div class="container"> 
         <div class="container_info">
-            <img src="Assets/RomeLogo.svg" alt="Rome-Project Logo" height="200" width="200"/>
+            <img src="assets/RomeLogo.svg" alt="Rome-Project Logo" height="200" width="200"/>
             <h1 class="title">Rome-Project</h1>
             <p class="subtitle">Developer Panel Access</p>
         </div>
 
-        <form class="login_form" id="loginForm" action="pages/login.php" method="POST">
+        <?php if ($error): ?>
+            <p class="error"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
+
+        <form class="login_form" id="loginForm" action="../backend/logic/login.php" method="POST">
             <div class="form_content">
                 <!-- Username Item -->
                 <div class="item">
@@ -49,6 +54,7 @@
                     >
                 </div>
             </div>
+            
             <div class="login_button_div">
                 <button type="submit" class="button_primary" id="loginButton">
                     Login
@@ -60,8 +66,7 @@
             <p>For technical support, contact system administrator</p>
         </div>
     </div>
-    <?php
-        include_once 'components/footer.php';
-    ?>
+
+    <?php include_once 'components/footer.php'; ?>
 </body>
 </html>
