@@ -6,7 +6,7 @@
 
    ---
 
-   <img src="./public/assets/RomeLogo.svg" height="200" width="200"/>
+   <img src="./public/assets/RomeLogo_Big.svg" height="200" width="200"/>
 
 </div>
 

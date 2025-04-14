@@ -2,7 +2,7 @@
     <!-- Logo & Project Name -->
     <div class="header_left">
         <a href="dashboard.php" class="logo">
-            <img src="assets/RomeLogo2.svg" alt="Rome Logo 2">
+            <img src="assets/RomeLogo_Small.ico" alt="Rome Logo 2">
             <p>Rome-Project</p>
         </a>
     </div>

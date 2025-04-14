@@ -22,7 +22,7 @@ $connected = $pdo->query("SELECT 1") !== false;
 
     <div class="container">
         <div class="container_info">
-            <img src="assets/RomeLogo.svg" alt="Rome-Project Logo" height="200" width="200"/>
+            <img src="assets/RomeLogo_Big.svg" alt="Rome-Project Logo" height="200" width="200"/>
             <h1 class="title">Developer Dashboard</h1>
             <p class="subtitle">Welcome, <?php echo htmlspecialchars($_SESSION['account']['username']); ?>!</p>
         </div>

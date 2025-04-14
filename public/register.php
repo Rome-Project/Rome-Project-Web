@@ -16,7 +16,7 @@ if (!$token) {
 <body class="bg-dark">
     <div class="container">
         <div class="container_info">
-            <img src="assets/RomeLogo.svg" alt="Rome-Project Logo" height="200" width="200"/>
+            <img src="assets/RomeLogo_Big.svg" alt="Rome-Project Logo" height="200" width="200"/>
             <h1 class="title">Register Account</h1>
         </div>
 
