@@ -31,7 +31,7 @@ unset($_SESSION['token_error']);
             <p class="error"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="../backend/logic/token.php" class="login_form">
+        <form method="POST" action="backend_router.php?action=token" class="login_form">
             <div class="form_content">
                 <div class="item">
                     <label for="role">Role</label>

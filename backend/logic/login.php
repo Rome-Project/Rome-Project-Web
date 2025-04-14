@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/database.php';
+require_once WEB_ROOT . 'backend/includes/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = new Database();
@@ -9,14 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     if (empty($username)) {
         $_SESSION['login_error'] = "Invalid username format!";
-        header("Location: ../../public/login.php");
+        header("Location: /login.php"); 
         exit;
     }
     
     $password = $_POST['password'] ?? '';
     if (empty($password)) {
         $_SESSION['login_error'] = "Password is required!";
-        header("Location: ../../public/login.php");
+        header("Location: /login.php"); 
         exit;
     }
     
@@ -45,16 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'is_enabled' => $user['is_enabled'],
         ];
 
-        header("Location: ../../public/dashboard.php");
+        header("Location: /dashboard.php");
         exit;
     } else {
         $_SESSION['login_error'] = "Invalid username or password!";
-        header("Location: ../../public/login.php");
+        header("Location: /login.php"); 
         exit;
     }
 }
 
 // Antarux NOTE: This redirect is for when the script is accessed directly without POST login data
-header("Location: ../../public/login.php");
+header("Location: /login.php");
 exit;
 ?>

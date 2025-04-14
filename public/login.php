@@ -25,7 +25,7 @@
             <p class="error"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
 
-        <form class="login_form" id="loginForm" action="../backend/logic/login.php" method="POST">
+        <form class="login_form" id="loginForm" action="backend_router.php?action=login" method="POST">
             <div class="form_content">
                 <!-- Username Item -->
                 <div class="item">

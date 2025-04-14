@@ -24,7 +24,7 @@ if (!$token) {
             <p class="error"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="../backend/logic/register.php?token=<?php echo htmlspecialchars($token); ?>" class="login_form">
+        <form method="POST" action="backend_router.php?action=register&token=<?php echo htmlspecialchars($token); ?>" class="login_form">
             <div class="form_content">
                 <div class="item">
                     <label for="username">Username</label>

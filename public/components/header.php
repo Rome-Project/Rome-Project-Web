@@ -24,7 +24,7 @@
                         <a href="token.php" class="dropdown_item">Generate Token</a>
                     <?php endif; ?>
 
-                    <a href="../backend/logic/logout.php" class="dropdown_item logout_item">Logout</a>
+                    <a href="backend_router.php?action=logout" class="dropdown_item logout_item">Logout</a>
                 </div>
             </div>
         <?php endif; ?>

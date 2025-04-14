@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once '../includes/database.php';
+require_once WEB_ROOT . 'backend/includes/database.php';
 
 $db = new Database();
 $pdo = $db->getConnection();
 
 $token = $_GET['token'] ?? '';
 if (!$token) {
-    header("Location: ../../public/login.php");
+    header("Location: /login.php");  
     exit;
 }
 
@@ -17,7 +17,7 @@ $token_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$token_data) {
     $_SESSION['register_error'] = "Invalid or used token.";
-    header("Location: ../../public/register.php?token=$token");
+    header("Location: /register.php?token=$token");
     exit;
 }
 
@@ -51,19 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$user_id]);
             
             $pdo->commit();
-            header("Location: ../../public/login.php");
+            header("Location: /login.php");  
             exit;
         } catch (PDOException $e) {
             $pdo->rollBack();
 
             $_SESSION['register_error'] = "Registration failed. Please try again.";
             error_log("Registration error: " . $e->getMessage());
-            header("Location: ../../public/register.php?token=$token");
+            header("Location: /register.php?token=$token");
             
             exit;
         }
     }
 }
 
-header("Location: ../../public/register.php?token=$token");
+header("Location: /register.php?token=$token");
 exit;
