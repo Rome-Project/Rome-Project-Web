@@ -1,22 +1,28 @@
 <?php
-session_start();
 require_once WEB_ROOT . 'backend/includes/Database.php';
+require_once WEB_ROOT . 'backend/includes/Security.php';
+require_once WEB_ROOT . 'backend/includes/ActionHistory.php';
+require_once WEB_ROOT . 'backend/includes/Registration.php';
+require WEB_ROOT . 'backend/includes/User.php';
 
-$db = new Database();
-$pdo = $db->getConnection();
-
+$pdo = Database::getDatabaseConnection();
 $token = $_GET['token'] ?? '';
+
 if (!$token) {
     header("Location: /login.php");  
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM registration_tokens WHERE token = ? AND used = 0");
-$stmt->execute([$token]);
-$token_data = $stmt->fetch(PDO::FETCH_ASSOC);
+$token_data = getTokenData($token);
+$moderator = $token_data['Moderator'] ?? "System";
 
 if (!$token_data) {
-    $_SESSION['register_error'] = "Invalid or used token.";
+    header("Location: /login.php");  
+    exit;
+}
+
+if ($token_data['IsUsed']) {
+    $_SESSION['register_error'] = "Token already used.";
     header("Location: /register.php?token=$token");
     exit;
 }
@@ -26,44 +32,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     
-    if (strlen($password) < 15 || !preg_match('/[0-9]/', $password) || !preg_match('/[\W]/', $password)) {
-        $_SESSION['register_error'] = "Password must be 15+ characters with numbers and special characters.";
-    } elseif ($password !== $confirm_password) {
-        $_SESSION['register_error'] = "Passwords do not match.";
-    } else {
-        $pdo->beginTransaction();
-        try {
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $role = $token_data['role'];
-            
-            $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role, last_ip) VALUES (?, ?, ?, INET6_ATON(?))");
-            $stmt->execute([$username, $password_hash, $role, $ip]);
-            
-            $user_id = $pdo->lastInsertId();
-            $stmt = $pdo->prepare("INSERT INTO user_settings (user_id) VALUES (?)");
-            $stmt->execute([$user_id]);
-            
-            $stmt = $pdo->prepare("UPDATE registration_tokens SET used = 1 WHERE token = ?");
-            $stmt->execute([$token]);
-            
-            $stmt = $pdo->prepare("INSERT INTO action_history (user_id, action, severity) VALUES (?, 'User registered', 'low')");
-            $stmt->execute([$user_id]);
-            
-            $pdo->commit();
-            header("Location: /login.php");  
-            exit;
-        } catch (PDOException $e) {
-            $pdo->rollBack();
+    // Validation
+    if (empty($username) || empty($password)) {
+        $_SESSION['register_error'] = "Username and password are required.";
+        header("Location: /register.php?token=$token");
+        exit;
+    }
 
-            $_SESSION['register_error'] = "Registration failed. Please try again.";
-            error_log("Registration error: " . $e->getMessage());
-            header("Location: /register.php?token=$token");
-            
-            exit;
-        }
+    if ($password !== $confirm_password) {
+        $_SESSION['register_error'] = "Passwords do not match.";
+        header("Location: /register.php?token=$token");
+        exit;
+    }
+
+    if (!validatePasswordStrength($password)) {
+        header("Location: /register.php?token=$token");
+        exit;
+    }
+    
+    $registeredNewUserState = registerNewUser($username, $password, $token_data['Role']);
+    if ($registeredNewUserState) {
+        setTokenAsUsed($token);
+        createHistoryLog($moderator, "User registered with username: " . $username, 'low');
+        header("Location: /login.php");  
+        exit;
+    } else {
+        $_SESSION['register_error'] = "Registration failed. Please try again";
+        header("Location: /register.php?token=$token");
+        exit;
     }
 }
 
 header("Location: /register.php?token=$token");
 exit;
+?>

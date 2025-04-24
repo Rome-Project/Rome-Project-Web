@@ -1,14 +1,9 @@
 <?php
-session_start();
-if (!isset($_SESSION['logged_in'])) {
-    header("Location: login.php");
+include_once 'components/require.php';
+
+if ($user->getRole() !== 'Developer') {
     exit;
 }
-
-if (!isset($_SESSION['account']['role']) || $_SESSION['account']['role'] !== 'Developer') {
-    exit;
-}
-
 
 $token_link = $_SESSION['token_link'] ?? '';
 unset($_SESSION['token_link']);
@@ -28,7 +23,7 @@ unset($_SESSION['token_error']);
         <h1 class="title">Generate Token</h1>
 
         <?php if ($error): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
+            <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
 
         <form method="POST" action="backend_router.php?action=token" class="login_form">

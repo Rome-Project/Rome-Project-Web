@@ -1,10 +1,4 @@
-<?php
-session_start();
-if (!isset($_SESSION['logged_in'])) {
-    header("Location: login.php");
-    exit;
-}
-?>
+<?php include_once 'components/require.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">

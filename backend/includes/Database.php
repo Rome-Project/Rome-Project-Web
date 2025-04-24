@@ -5,13 +5,16 @@ class Database {
     private $username = "antarux";
     private $password = "";
     private $db_name = "rome_project_db";
+
     private $connection = null;
+    private static $instance = null;
 
     /*
         - Database class Constructor
         - Establishes a connection to the database using PDO
+        - Not callable directly from outside of the class to prevent multiple connections
     */
-    public function __construct() {
+    private function __construct() {
         try {
             $this->connection = new PDO(
                 "mysql:host=$this->host;dbname=$this->db_name;port=$this->port;charset=utf8",
@@ -25,9 +28,26 @@ class Database {
         }
     }
 
-    // Returns the PDO database connection Instance
+    /* 
+        - Returns the PDO Instance of the Database class 
+        - If the Instance is null, we call the constructor and create a new instance & connection
+    */
+    public static function getPDOInstance() {
+        if (self::$instance === null) {
+            self::$instance = new Database();
+        }
+
+        return self::$instance;
+    }
+
+    // Returns the PDO database connection
     public function getConnection() {
         return $this->connection;
+    }
+
+    // Returns the singleton Database class
+    public static function getDatabaseConnection() {
+        return self::getPDOInstance()->getConnection();
     }
 
     /*
@@ -36,46 +56,6 @@ class Database {
     */
     public function __destruct() {
         $this->connection = null;
-    }
-
-    // Returns the user data for the given user ID
-    public function getUserById($userId) {
-        // Antarux NOTE: Do not use * in SELECT statements, always specify the columns you need for user rows as selecting all can expose password
-        $stmt = $this->connection->prepare("SELECT id, username, email, created_at, last_login, last_ip, is_enabled, role FROM users WHERE id = ?");
-        $stmt->execute([$userId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /*
-        - Updates the user data with the gived user ID and data array
-        - The data array should contain the fields to be updated and their new values
-        - Returns the updated user data
-    */
-    public function updateUserData($userId, $data) {
-        $this->connection->beginTransaction();
-
-        // Antarux NOTE: We need to remove sensitive fields from the $data array to prevent accidental updates of these fields
-        if (isset($data['id'])) {
-            unset($data['id']);
-        }
-        if (isset($data['password_hash'])) {
-            unset($data['password_hash']);
-        }
-
-        $fields = array_keys($data);
-        $placeholders = implode(', ', array_map(function($field) {
-            return "$field = ?";
-        }, $fields));
-        $values = array_values($data);
-        $values[] = $userId;
-
-        $stmt = $this->connection->prepare("UPDATE users SET $placeholders WHERE id = ?");
-        $stmt->execute($values);
-
-        $updatedUser = $this->getUserById($userId);
-        $this->connection->commit();
-
-        return $updatedUser;
     }
 }
 ?>

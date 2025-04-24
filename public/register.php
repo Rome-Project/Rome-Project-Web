@@ -1,7 +1,9 @@
 <?php
 session_start();
+
 $token = $_GET['token'] ?? '';
 $error = $_SESSION['register_error'] ?? '';
+
 unset($_SESSION['register_error']);
 
 if (!$token) {
@@ -21,7 +23,7 @@ if (!$token) {
         </div>
 
         <?php if ($error): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
+            <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
 
         <form method="POST" action="backend_router.php?action=register&token=<?php echo htmlspecialchars($token); ?>" class="login_form">

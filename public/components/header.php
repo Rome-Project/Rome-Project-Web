@@ -12,15 +12,15 @@
         <?php if ($_SESSION['logged_in']): ?>
             <div class="account_bubble">
                 <button class="account_button" id="accountButton">
-                    <span class="account_initial"><?php echo strtoupper(substr($_SESSION['account']['username'], 0, 1)); ?></span>
+                    <span class="account_initial"><?php echo strtoupper(substr($user->getUsername(), 0, 1)); ?></span>
                 </button>
 
                 <!-- Dropdown menu -->
                 <div class="dropdown_menu" id="accountDropdown">
-                    <div class="dropdown_header"><?php echo htmlspecialchars($_SESSION['account']['username']); ?></div>
+                    <div class="dropdown_header"><?php echo $user->getUsername(); ?></div>
                     <a href="settings.php" class="dropdown_item">Settings</a>
                     
-                    <?php if (isset($_SESSION['account']['role']) && $_SESSION['account']['role'] === 'Developer'): ?>
+                    <?php if ($user->getRole() === 'Developer'): ?>
                         <a href="token.php" class="dropdown_item">Generate Token</a>
                     <?php endif; ?>
 
@@ -31,20 +31,5 @@
     </div>
 </header>
 
-<script>
-    // Toggle account dropdown
-    document.getElementById('accountButton').addEventListener('click', function() {
-        const dropdown = document.getElementById('accountDropdown');
-        dropdown.classList.toggle('show');
-    });
-
-    // Close dropdown when clicking outside
-    window.addEventListener('click', function(event) {
-        if (!event.target.closest('.account_button')) {
-            const dropdown = document.getElementById('accountDropdown');
-            if (dropdown?.classList.contains('show')) {
-                dropdown.classList.remove('show');
-            }
-        }
-    });
-</script>
+<!-- Antarux NOTE: I know it's not really ideal to load it here, but it's a small file so it should not cause optimization trouble in da end -->
+<script src="app/TopBarNav.js"></script> 

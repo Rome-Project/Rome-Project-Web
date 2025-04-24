@@ -7,11 +7,14 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 require_once WEB_ROOT . 'backend/includes/Database.php';
+require_once WEB_ROOT . 'backend/includes/Security.php';
+require_once WEB_ROOT . 'backend/includes/Registration.php';
+require WEB_ROOT . 'backend/includes/User.php';
 
-$db = new Database();
-$pdo = $db->getConnection();
+$pdo = Database::getDatabaseConnection();
+$user = User::getOrSaveUser($_SESSION['client']);
 
-if (!isset($_SESSION['account']['role']) || $_SESSION['account']['role'] != 'Developer') {
+if ($user->getRole() !== 'Developer') {
     header("Location: /login.php");  
     exit;
 }
@@ -22,21 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($role, ['Developer', 'Influencer', 'Player'])) {
         $_SESSION['token_error'] = "Invalid role";
     } else {
-        $token = bin2hex(random_bytes(32));
+        $token = generateToken();
+        $moderator = $user->getUsername();
         
-        $stmt = $pdo->prepare("INSERT INTO registration_tokens (token, role) VALUES (?, ?)");
-        $stmt->execute([$token, $role]);
+        $createTokenState = createRegistrationToken($token, $role, $moderator);
+        if ($createTokenState) {
+            // Antarux NOTE: Dynamic base URL for XAMPP Web Server and VPS Server at the same time
+            // https://www.php.net/manual/en/reserved.variables.server.php
+            $protocol = 'http';
+            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+                $protocol = 'https';
+            }
 
-        // Antarux NOTE: Dynamic base URL for XAMPP Server and VPS Server at the same time
-        $protocol = 'http';
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-            $protocol = 'https';
+            $host = $_SERVER['HTTP_HOST'];
+            $base_url = "$protocol://$host";
+
+            $_SESSION['token_link'] = "$base_url/register.php?token=$token";
+        } else {
+            $_SESSION['token_error'] = "Failed to create token";
         }
-        $host = $_SERVER['HTTP_HOST'];
-        $base_url = "$protocol://$host";
-
-        $_SESSION['token_link'] = "$base_url/register.php?token=$token";
     }
+    
     header("Location: /token.php");
     exit;
 }
+?>

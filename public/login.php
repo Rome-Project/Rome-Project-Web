@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
     session_start();
     if (isset($_SESSION['logged_in'])) {
@@ -13,6 +11,8 @@
     include_once 'components/head.php';
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <body class="bg-dark">
     <div class="container"> 
         <div class="container_info">
@@ -22,7 +22,7 @@
         </div>
 
         <?php if ($error): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
+            <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
 
         <form class="login_form" id="loginForm" action="backend_router.php?action=login" method="POST">
