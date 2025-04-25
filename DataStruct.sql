@@ -47,5 +47,5 @@ create table GameBans (
     Moderator bigint not null,
     Reason varchar(255) default 'No reason provided',
     Ban_Start timestamp default current_timestamp,
-    Duration timestamp not null
+    Duration bigint default 3600
 )

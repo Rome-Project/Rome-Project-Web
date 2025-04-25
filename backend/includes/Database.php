@@ -2,8 +2,8 @@
 class Database {
     private $host = "178.128.173.36";
     private $port = 3306;
-    private $username = "antarux";
-    private $password = "";
+    private $username;
+    private $password;
     private $db_name = "rome_project_db";
 
     private $connection = null;
@@ -15,6 +15,14 @@ class Database {
         - Not callable directly from outside of the class to prevent multiple connections
     */
     private function __construct() {
+        $this->username = getenv("DATABASE_USER");
+        $this->password = getenv("DATABASE_PASS");
+
+        if (!isset($this->username) || !isset($this->password)) {
+            error_log("Database connection cannot proceed due to missing params");
+            exit;
+        }
+
         try {
             $this->connection = new PDO(
                 "mysql:host=$this->host;dbname=$this->db_name;port=$this->port;charset=utf8",
