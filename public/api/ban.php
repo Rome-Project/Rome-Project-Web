@@ -20,31 +20,32 @@ if ($auth_header !== "Bearer $server_token") {
 
 /*
 https://www.php.net/manual/en/function.file-get-contents.php
-https://stackoverflow.com/questions/16884155/what-is-the-difference-between-request-and-file-get-contentsphp-input
+https://stackoverflow.com/questions/16884155/what-is-the-difference-between-request-and-file-get-contentsphp-data
 https://stackoverflow.com/questions/8270830/use-file-get-contents
 */
-$input = json_decode(file_get_contents("php://input"), true);
-if (!isset($input["player"]) || !isset($input["mod"]) || !isset($input["duration"])) {
+$data = json_decode(file_get_contents("php://data"), true);
+if (!isset($data["player"]) || !isset($data["mod"]) || !isset($data["duration"])) {
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "Missing required parameters"]);
     exit;
 }
 
-$player_id = $input["player"];
-$moderator_id = $input["mod"];
-$reason = $input["reason"] ?? "No reason provided";
-$duration = $input["duration"];
+$player_id = $data["player"];
+$moderator_id = $data["mod"];
+$reason = $data["reason"] ?? "No reason provided";
+$duration = $data["duration"];
 
 if (!is_numeric($player_id) || !is_numeric($moderator_id) || !is_numeric($duration)) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Invalid input types"]);
+    echo json_encode(["success" => false, "message" => "Invalid data types"]);
     exit;
 }
 
 $pdo = Database::getDatabaseConnection();
-$pdo->beginTransaction();
 
 try {
+    $pdo->beginTransaction();
+    
     $stmt = $pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
     $stmt->execute([$player_id]);
     $fetchedData = $token_data = $stmt->fetch(PDO::FETCH_ASSOC);

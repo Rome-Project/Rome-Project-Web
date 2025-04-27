@@ -4,9 +4,10 @@ require_once 'Database.php';
 // Creates a new action log for the action history
 function createHistoryLog($moderator_id, $action_info, $severity) {
     $pdo = Database::getDatabaseConnection();
-    $pdo->beginTransaction();
         
     try {
+        $pdo->beginTransaction();
+        
         $stmt = $pdo->prepare("INSERT INTO Action_History (Moderator, Action_Info, Severity) VALUES (?, ?, ?)");
         $stmt->execute([$moderator_id, $action_info, $severity]);
 

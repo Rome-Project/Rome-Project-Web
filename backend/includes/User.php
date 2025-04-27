@@ -67,25 +67,36 @@ class User {
             throw new Exception("Failed to update user data, user is not loaded");
         }
 
+        // Antarux NOTE: We need to remove sensitive fields from the $data array to prevent accidental updates of these fields
+        if (isset($data['User_ID'])) { unset($data['User_ID']); }
+        if (isset($data['Password'])) { unset($data['Password']); }
+        if (isset($data['Created_At'])) { unset($data['Created_At']); }
+        if (isset($data['Username'])) { unset($data['Username']); }
+        if (isset($data['Email'])) { unset($data['Email']); }
+
         $pdo = Database::getDatabaseConnection();
-        $pdo->beginTransaction();
         
         try {
-            // Antarux NOTE: We need to remove sensitive fields from the $data array to prevent accidental updates of these fields
-            if (isset($data['User_ID'])) { unset($data['User_ID']); }
-            if (isset($data['Password'])) { unset($data['Password']); }
-            if (isset($data['Created_At'])) { unset($data['Created_At']); }
-            if (isset($data['Username'])) { unset($data['Username']); }
-            if (isset($data['Email'])) { unset($data['Email']); }
+            $pdo->beginTransaction();
 
-            $fields = array_keys($data);
-            $placeholders = implode(', ', array_map(function($field) {
-                return "$field = ?";
-            }, $fields));
-            $values = array_values($data);
+            $rowsToUpdate = "";
+            $values = [];
+            $debounce = true;
+
+            foreach ($data as $field => $value) {
+                if ($debounce) {
+                    $rowsToUpdate = "$field = ?";
+                    $debounce = false;
+                } else {
+                    $rowsToUpdate .= ", $field = ?";
+                }
+
+                $values[] = $value;
+            }
+
             $values[] = $this->userid;
 
-            $stmt = $pdo->prepare("UPDATE User SET $placeholders WHERE User_ID = ?");
+            $stmt = $pdo->prepare("UPDATE User SET $rowsToUpdate WHERE User_ID = ?");
             $stmt->execute($values);
 
             $pdo->commit();

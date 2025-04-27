@@ -5,9 +5,10 @@ require_once 'Security.php';
 // Creates a new action log for the action history
 function createRegistrationToken($token, $role, $moderator) {
     $pdo = Database::getDatabaseConnection();
-    $pdo->beginTransaction();
         
     try {
+        $pdo->beginTransaction();
+        
         $stmt = $pdo->prepare("INSERT INTO Registration_Token (Token, Role, Moderator) VALUES (?, ?, ?)");
         $stmt->execute([$token, $role, $moderator]);
 
@@ -34,9 +35,10 @@ function getTokenData($token) {
 // Sets the passed token as used
 function setTokenAsUsed($token) {
     $pdo = Database::getDatabaseConnection();
-    $pdo->beginTransaction();
 
     try {
+        $pdo->beginTransaction();
+
         $stmt = $pdo->prepare("UPDATE Registration_Token SET IsUsed = 1 WHERE Token = ?");
         $stmt->execute([$token]);
 
@@ -52,9 +54,9 @@ function setTokenAsUsed($token) {
 // Registers a new user with passed data
 function registerNewUser($username, $password, $role) {
     $pdo = Database::getDatabaseConnection();
-    $pdo->beginTransaction();
         
     try {
+        $pdo->beginTransaction();
         $hashedPassword = hashPassword($password);
            
         // Creating a new user

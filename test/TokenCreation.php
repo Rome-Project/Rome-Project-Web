@@ -12,9 +12,10 @@ $moderator = "SystemAdmin";
 
 $pdo = null;
 $pdo = Database::getDatabaseConnection();
-$pdo->beginTransaction();
     
 try {
+    $pdo->beginTransaction();
+
     $stmt = $pdo->prepare("INSERT INTO Registration_Token (Token, Role, Moderator) VALUES (?, ?, ?)");
     $stmt->execute([$token, $role, $moderator]);
 
