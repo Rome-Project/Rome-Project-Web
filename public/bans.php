@@ -3,17 +3,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once 'components/head.php'; ?>
-<body class="bg-dark">
+<body>
     <?php include_once 'components/header.php'; ?>
     <?php include_once 'components/sidebar.php'; ?>
 
-    <div class="container">
-        <div class="container_info">
-            <img src="assets/RomeLogo_Big.svg" alt="Rome-Project Logo" height="200" width="200"/>
-            <h1 class="title">Hello, World!</h1>
-            <p class="subtitle">bans.php</p>
+    <div class="ban_container">
+        <form class="ban_form" id="banForm" action="" method="POST">
+            <div class="ban_form_content">
+                <!-- Player ID -->
+                <div class="ban_form_group">
+                    <label for="player_id">Player ID</label>
+                    <input 
+                        type="number" 
+                        class="ban_form_input" 
+                        name="player_id" 
+                        id="player_id" 
+                        required
+                    >
+                </div>
+                <!-- Reason -->
+                <div class="ban_form_group">
+                    <label for="reason">Reason</label>
+                    <textarea 
+                        class="ban_form_input" 
+                        name="reason" 
+                        id="reason" 
+                        maxlength="255" 
+                        style="height: 25rem; resize: none;" 
+                        rows="10" 
+                        required
+                    ></textarea>
+                </div>
+                <!-- Ban Duration -->
+                <div class="ban_form_group">
+                    <label for="duration">Duration</label>
+                    <select class="ban_form_input" name="duration" id="duration" required>
+                        <option value="3600">1 Hour</option>
+                        <option value="86400">1 Day</option>
+                        <option value="604800">1 Week</option>
+                        <option value="2592000">1 Month</option>
+                        <option value="31536000">1 Year</option>
+                        <option value="0">Permanent</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="button_primary">Ban Player</button>
+            </div>
+        </form>
+        
+        <div class="available_bans">
+            <!-- TODO -->
+            <h2>Banned Players</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
         </div>
     </div>
+
     <?php include_once 'components/footer.php'; ?>
 </body>
 </html>

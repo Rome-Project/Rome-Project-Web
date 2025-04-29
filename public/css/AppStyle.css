@@ -345,3 +345,82 @@ footer p {
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--accent-blue);
 }
+
+/* Bans Page */
+
+.ban_container {
+    display: flex;
+    flex-direction: reverse;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1600px;
+    flex-grow: 1;
+    margin: 0 auto;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.ban_container .ban_form {
+    width: 30%;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -1px var(--shadow-color);
+}
+
+.ban_container .ban_form .ban_form_content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ban_container .ban_form .ban_form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ban_container .ban_form .ban_form_group .ban_form_input {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+
+.ban_container .available_bans {
+    flex: 1;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -1px var(--shadow-color);
+}
+
+.ban_container .available_bans h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-rome-primary);
+}
+
+.ban_container .available_bans p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .ban_container {
+        flex-direction: column;
+    }
+    .ban_container .ban_form,
+    .ban_container .info_section {
+        flex: none;
+        width: 100%;
+    }
+}
