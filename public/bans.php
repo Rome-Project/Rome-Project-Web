@@ -8,7 +8,7 @@
     <?php include_once 'components/sidebar.php'; ?>
 
     <div class="ban_container">
-        <form class="ban_form" id="banForm" action="" method="POST">
+        <form class="ban_form" id="banForm" method="POST">
             <div class="ban_form_content">
                 <!-- Player ID -->
                 <div class="ban_form_group">
@@ -54,7 +54,26 @@
         <div class="available_bans">
             <!-- TODO -->
             <h2>Banned Players</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <form class="search_form" method="GET">
+                <div class="search_form_content">
+                    <div class="search_form_group">
+                        <input 
+                            type="text" 
+                            class="search_form_input" 
+                            name="search_id" 
+                            id="search_id" 
+                            placeholder="Search bans"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="button_primary">Search</button>
+                </div>
+            </form>
+
+            <div class="bans_data">
+                <!-- TODO: Dynamic ban data loading -->
+            </div>
         </div>
     </div>
 
