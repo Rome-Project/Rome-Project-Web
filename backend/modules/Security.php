@@ -1,6 +1,6 @@
 <?php
 // Validates password strength
-function validatePasswordStrength($password) {
+function validatePasswordStrength(string $password): bool {
     if (strlen($password) < 15) {
         $_SESSION['register_error'] = "Password must be at least 15 characters long";
         return false;
@@ -23,7 +23,7 @@ function validatePasswordStrength($password) {
     - Hashes the password using blowfish alogithm
     - https://www.php.net/manual/en/function.password-hash.php 
 */
-function hashPassword($password) {
+function hashPassword(string $password): string {
     return password_hash($password, PASSWORD_BCRYPT);
 }
 
@@ -31,7 +31,7 @@ function hashPassword($password) {
     - Verifies the password with the hashed version
     - https://www.php.net/manual/en/function.password-verify.php
 */
-function verifyPassword($password, $hash) {
+function verifyPassword(string $password, string $hash): bool {
     return password_verify($password, $hash);
 }
 
@@ -39,7 +39,7 @@ function verifyPassword($password, $hash) {
     - Validates the email address, to make sure, well, that it is a valid email
     - https://www.php.net/manual/en/function.filter-var.php
 */
-function validateEmail($email) {
+function validateEmail(string $email): mixed {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
@@ -48,7 +48,7 @@ function validateEmail($email) {
     - Uses 128 bits for hexa string security basically lol
     - https://www.php.net/manual/en/function.bin2hex.php
 */
-function generateToken() {
+function generateToken(): string {
     return bin2hex(random_bytes(16));
 }   
 ?>

@@ -2,17 +2,17 @@
 header("Content-Type: application/json");
 require_once '../../backend/includes/Database.php';
 
-$server_token = getenv("CHECKBAN_API_TOKEN");
+$serverToken = getenv("CHECKBAN_API_TOKEN");
 $headers = apache_request_headers(); // https://www.php.net/manual/en/function.apache-request-headers.php
-$auth_header = $headers["Authorization"] ?? "";
+$authHeader = $headers["Authorization"] ?? "";
 
-if ($server_token === null) {
+if ($serverToken === null) {
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Server token config error"]);
     exit;
 }
 
-if ($auth_header !== "Bearer $server_token") {
+if ($authHeader !== "Bearer $serverToken") {
     http_response_code(401);
     echo json_encode(["success" => false, "message" => "Unauthorized"]);
     exit;
@@ -30,9 +30,9 @@ if (!isset($data["player"])) {
     exit;
 }
 
-$player_id = $data["player"];
+$playerId = $data["player"];
 
-if (!is_numeric($player_id)) {
+if (!is_numeric($playerId)) {
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "Invalid data type"]);
     exit;
@@ -42,7 +42,7 @@ $pdo = Database::getDatabaseConnection();
 
 try {
     $stmt = $pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
-    $stmt->execute([$player_id]);
+    $stmt->execute([$playerId]);
     $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($fetchedData) {
@@ -52,8 +52,11 @@ try {
         http_response_code(200);
         echo json_encode(["success" => true, "response" => false, "message" => "Player is not banned"]);
     }
+
+    exit;
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Failed to check ban status for user: ' . $e->getMessage()]);
+    exit;
 }
 ?>

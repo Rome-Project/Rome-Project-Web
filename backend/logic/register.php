@@ -1,11 +1,14 @@
 <?php
 require_once WEB_ROOT . 'backend/includes/Database.php';
-require_once WEB_ROOT . 'backend/includes/Security.php';
-require_once WEB_ROOT . 'backend/includes/ActionHistory.php';
-require_once WEB_ROOT . 'backend/includes/Registration.php';
-require WEB_ROOT . 'backend/includes/User.php';
+require_once WEB_ROOT . 'backend/modules/Security.php';
+require_once WEB_ROOT . 'backend/classes/ActionHistoryClass.php';
+require_once WEB_ROOT . 'backend/classes/RegistrationClass.php';
+require WEB_ROOT . 'backend/classes/UserClass.php';
 
 $pdo = Database::getDatabaseConnection();
+$RegistrationClass = new Registration();
+$ActionHistoryClass = new ActionHistory();
+
 $token = $_GET['token'] ?? '';
 
 if (!$token) {
@@ -13,24 +16,24 @@ if (!$token) {
     exit;
 }
 
-$token_data = getTokenData($token);
-$moderator = $token_data['Moderator'] ?? "System";
+$tokenData = getTokenData($token);
+$moderator = $tokenData['Moderator'] ?? "System";
 
-if (!$token_data) {
+if (!$tokenData) {
     header("Location: /login.php");  
     exit;
 }
 
-if ($token_data['IsUsed']) {
+if ($tokenData['IsUsed']) {
     $_SESSION['register_error'] = "Token already used.";
     header("Location: /register.php?token=$token");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $username = htmlspecialchars($_POST['username']) ?? '';
+    $password = htmlspecialchars($_POST['password']) ?? '';
+    $confirmPassword = htmlspecialchars($_POST['confirmPassword']) ?? '';
     
     // Validation
     if (empty($username) || empty($password)) {
@@ -39,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if ($password !== $confirm_password) {
+    if ($password !== $confirmPassword) {
         $_SESSION['register_error'] = "Passwords do not match.";
         header("Location: /register.php?token=$token");
         exit;
@@ -50,10 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $registeredNewUserState = registerNewUser($username, $password, $token_data['Role']);
+    $registeredNewUserState = $RegistrationClass->registerNewUser($username, $password, $tokenData['Role']);
     if ($registeredNewUserState) {
-        setTokenAsUsed($token);
-        createHistoryLog($moderator, "User registered with username: " . $username, 'low');
+        $RegistrationClass->setTokenAsUsed($token);
+        $ActionHistoryClass->createHistoryLog($moderator, "User registered with username: " . $username, 'low');
         header("Location: /login.php");  
         exit;
     } else {

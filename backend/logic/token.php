@@ -7,14 +7,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 require_once WEB_ROOT . 'backend/includes/Database.php';
-require_once WEB_ROOT . 'backend/includes/Security.php';
-require_once WEB_ROOT . 'backend/includes/Registration.php';
-require WEB_ROOT . 'backend/includes/User.php';
+require_once WEB_ROOT . 'backend/modules/Security.php';
+require_once WEB_ROOT . 'backend/classes/RegistrationClass.php';
+require WEB_ROOT . 'backend/classes/UserClass.php';
 
 $pdo = Database::getDatabaseConnection();
-$user = User::getOrSaveUser($_SESSION['client']);
+$UserClass = UserClass::getOrSaveUser($_SESSION['client']);
+$RegistrationClass = new Registration();
 
-if ($user->getRole() !== 'Developer') {
+
+if ($UserClass->getRole() !== 'Developer') {
     header("Location: /login.php");  
     exit;
 }
@@ -26,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['token_error'] = "Invalid role";
     } else {
         $token = generateToken();
-        $moderator = $user->getUsername();
+        $moderator = $UserClass->getUsername();
         
-        $createTokenState = createRegistrationToken($token, $role, $moderator);
+        $createTokenState = $RegistrationClass->createRegistrationToken($token, $role, $moderator);
         if ($createTokenState) {
             // Antarux NOTE: Dynamic base URL for XAMPP Web Server and VPS Server at the same time
             // https://www.php.net/manual/en/reserved.variables.server.php
@@ -38,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $host = $_SERVER['HTTP_HOST'];
-            $base_url = "$protocol://$host";
+            $baseUrl = "$protocol://$host";
 
-            $_SESSION['token_link'] = "$base_url/register.php?token=$token";
+            $_SESSION['token_link'] = "$baseUrl/register.php?token=$token";
         } else {
             $_SESSION['token_error'] = "Failed to create token";
         }

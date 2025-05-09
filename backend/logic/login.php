@@ -2,8 +2,8 @@
 session_start();
 
 require_once WEB_ROOT . 'backend/includes/Database.php';
-require_once WEB_ROOT . 'backend/includes/Security.php';
-require WEB_ROOT . 'backend/includes/User.php';
+require_once WEB_ROOT . 'backend/modules/Security.php';
+require WEB_ROOT . 'backend/classes/UserClass.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo = Database::getDatabaseConnection();
@@ -27,13 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (verifyPassword($password, $fetchedData['Password'])) {
-        $user = User::getOrSaveUser($username);
-        $user->updateUserData([
+        $UserClass = UserClass::getOrSaveUser($username);
+        $UserClass->updateUserData([
             'Last_Login' => date('Y-m-d H:i:s'),
         ]);
 
         $_SESSION['logged_in'] = true;
-        $_SESSION['client'] = $user->getUsername();
+        $_SESSION['client'] = $UserClass->getUsername();
 
         header("Location: /dashboard.php");
         exit;

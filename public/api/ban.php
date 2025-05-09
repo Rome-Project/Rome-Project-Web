@@ -2,17 +2,17 @@
 header("Content-Type: application/json");
 require_once '../../backend/includes/Database.php';
 
-$server_token = getenv("BAN_API_TOKEN");
+$serverToken = getenv("BAN_API_TOKEN");
 $headers = apache_request_headers(); // https://www.php.net/manual/en/function.apache-request-headers.php
-$auth_header = $headers["Authorization"] ?? "";
+$authHeader = $headers["Authorization"] ?? "";
 
-if ($server_token === null) {
+if ($serverToken === null) {
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Server token config error"]);
     exit;
 }
 
-if ($auth_header !== "Bearer $server_token") {
+if ($authHeader !== "Bearer $serverToken") {
     http_response_code(401);
     echo json_encode(["success" => false, "message" => "Unauthorized"]);
     exit;
@@ -30,8 +30,8 @@ if (!isset($data["player"]) || !isset($data["mod"]) || !isset($data["duration"])
     exit;
 }
 
-$player_id = $data["player"];
-$moderator_id = $data["mod"];
+$playerId = $data["player"];
+$moderatorId = $data["mod"];
 $reason = $data["reason"] ?? "No reason provided";
 $duration = $data["duration"];
 
@@ -47,7 +47,7 @@ try {
     $pdo->beginTransaction();
     
     $stmt = $pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
-    $stmt->execute([$player_id]);
+    $stmt->execute([$playerId]);
     $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($fetchedData) {
@@ -58,7 +58,7 @@ try {
 
 
     $stmt = $pdo->prepare("INSERT INTO GameBans (Player_ID, Moderator, Reason, Duration) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$player_id, $moderator_id, $reason, $duration]);
+    $stmt->execute([$playerId, $moderationId, $reason, $duration]);
 
     $pdo->commit();
 
@@ -69,5 +69,6 @@ try {
     $pdo->rollBack();
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Failed to ban user: ' . $e->getMessage()]);
+    exit;
 }
 ?>

@@ -12,15 +12,15 @@
         <?php if ($_SESSION['logged_in']): ?>
             <div class="account_bubble">
                 <button class="account_button" id="accountButton">
-                    <span class="account_initial"><?php echo strtoupper(substr($user->getUsername(), 0, 1)); ?></span>
+                    <span class="account_initial"><?php echo strtoupper(substr($UserClass->getUsername(), 0, 1)); ?></span>
                 </button>
 
                 <!-- Dropdown menu -->
                 <div class="dropdown_menu" id="accountDropdown">
-                    <div class="dropdown_header"><?php echo $user->getUsername(); ?></div>
+                    <div class="dropdown_header"><?php echo $UserClass->getUsername(); ?></div>
                     <a href="settings.php" class="dropdown_item">Settings</a>
                     
-                    <?php if ($user->getRole() === 'Developer'): ?>
+                    <?php if ($UserClass->getRole() === 'Developer'): ?>
                         <a href="token.php" class="dropdown_item">Generate Token</a>
                     <?php endif; ?>
 
