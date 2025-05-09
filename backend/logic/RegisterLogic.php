@@ -6,8 +6,8 @@ require_once WEB_ROOT . 'backend/classes/RegistrationClass.php';
 require WEB_ROOT . 'backend/classes/UserClass.php';
 
 $pdo = Database::getDatabaseConnection();
-$RegistrationClass = new Registration();
-$ActionHistoryClass = new ActionHistory();
+$RegistrationClass = new RegistrationClass();
+$ActionHistoryClass = new ActionHistoryClass();
 
 $token = $_GET['token'] ?? '';
 
@@ -16,7 +16,7 @@ if (!$token) {
     exit;
 }
 
-$tokenData = getTokenData($token);
+$tokenData = $RegistrationClass->getTokenData($token);
 $moderator = $tokenData['Moderator'] ?? "System";
 
 if (!$tokenData) {

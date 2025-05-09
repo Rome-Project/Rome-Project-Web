@@ -15,7 +15,7 @@ class Database {
         - Not callable directly from outside of the class to prevent multiple connections
     */
     private function __construct() {
-        $this->username =  getenv("DATABASE_USER");
+        $this->username = getenv("DATABASE_USER");
         $this->password = getenv("DATABASE_PASS");
 
         if (!isset($this->username) || !isset($this->password)) {

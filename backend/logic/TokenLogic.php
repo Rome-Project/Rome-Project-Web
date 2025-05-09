@@ -13,7 +13,7 @@ require WEB_ROOT . 'backend/classes/UserClass.php';
 
 $pdo = Database::getDatabaseConnection();
 $UserClass = UserClass::getOrSaveUser($_SESSION['client']);
-$RegistrationClass = new Registration();
+$RegistrationClass = new RegistrationClass();
 
 
 if ($UserClass->getRole() !== 'Developer') {

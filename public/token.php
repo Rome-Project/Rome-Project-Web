@@ -1,7 +1,7 @@
 <?php
 include_once 'components/require.php';
 
-if ($user->getRole() !== 'Developer') {
+if ($UserClass->getRole() !== 'Developer') {
     exit;
 }
 
