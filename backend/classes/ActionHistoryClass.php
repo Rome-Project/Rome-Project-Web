@@ -10,22 +10,19 @@ class ActionHistoryClass {
     }
 
     // Creates a new action log for the action history
-    public function createHistoryLog(int $moderator_id, string $action_info, string $severity): bool {
-        $pdo = Database::getDatabaseConnection();
-            
+    public function createHistoryLog(int $moderator_id, string $action_info, string $severity): bool {            
         try {
-            $pdo->beginTransaction();
+            $this->pdo->beginTransaction();
             
-            $stmt = $pdo->prepare("INSERT INTO Action_History (Moderator, Action_Info, Severity) VALUES (?, ?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO Action_History (Moderator, Action_Info, Severity) VALUES (?, ?, ?)");
             $stmt->execute([$moderator_id, $action_info, $severity]);
     
-            $pdo->commit();
+            $this->pdo->commit();
             return true;
         } catch (PDOException $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             error_log("Failed to create action log: " . $e->getMessage());
             return false;
-            exit;
         }
     }
 }

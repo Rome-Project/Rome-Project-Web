@@ -109,7 +109,6 @@ class UserClass {
             $pdo->rollBack();
             error_log("Failed to update data for " . $this->username . ", " . $e->getMessage());
             return false;
-            exit;
         }
     }
 
