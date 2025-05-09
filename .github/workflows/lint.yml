@@ -1,0 +1,23 @@
+name: Lint
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Backend linting
+        uses: php-actions/phpstan@v3
+        with:
+          path: backend/
+
+      - name: Frontend linting
+        uses: php-actions/phpstan@v3
+        with:
+          path: public/

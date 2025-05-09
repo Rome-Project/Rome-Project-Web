@@ -4,6 +4,10 @@
       <img src="https://github.com/Rome-Project/Rome-Project-Web/actions/workflows/deploy.yml/badge.svg" alt="Deploy status"/>
    </a>
 
+   <a href="https://github.com/Rome-Project/Rome-Project-Web/actions">
+      <img src="https://github.com/Rome-Project/Rome-Project-Web/actions/workflows/lint.yml/badge.svg" alt="Lint status"/>
+   </a>
+
    ---
 
    <img src="./public/assets/RomeLogo_Big.svg" height="200" width="200"/>
