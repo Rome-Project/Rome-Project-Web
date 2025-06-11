@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-require_once '../../backend/includes/Database.php';
+require_once '../../backend/classes/BansDataClass.php';
 
 $serverToken = getenv("UNBAN_API_TOKEN");
 $headers = apache_request_headers(); // https://www.php.net/manual/en/function.apache-request-headers.php
@@ -38,33 +38,10 @@ if (!is_numeric($playerId)) {
     exit;
 }
 
-$pdo = Database::getDatabaseConnection();
+$BansDataClass = new BansDataClass();
+[$success, $message] = $BansDataClass->removeBanForUser($playerId);
 
-try {
-    $pdo->beginTransaction();
-    
-    $stmt = $pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
-    $stmt->execute([$playerId]);
-    $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$fetchedData) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Player is not banned']);
-        exit;
-    }
-
-    $stmt = $pdo->prepare("DELETE FROM GameBans WHERE Player_ID = ?");
-    $stmt->execute([$playerId]);
-
-    $pdo->commit();
-
-    http_response_code(200);
-    echo json_encode(["success" => true, "message" => "Successfully unbanned user"]);
-    exit;
-} catch (PDOException $e) {
-    $pdo->rollBack();
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Failed to unban user: ' . $e->getMessage()]);
-    exit;
-}
+http_response_code($success ? 200 : 400);
+echo json_encode(["success" => $success, "message" => $message]);
+exit;
 ?>

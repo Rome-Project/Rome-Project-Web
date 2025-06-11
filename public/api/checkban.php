@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-require_once '../../backend/includes/Database.php';
+require_once '../../backend/classes/BansDataClass.php';
 
 $serverToken = getenv("CHECKBAN_API_TOKEN");
 $headers = apache_request_headers(); // https://www.php.net/manual/en/function.apache-request-headers.php
@@ -38,25 +38,14 @@ if (!is_numeric($playerId)) {
     exit;
 }
 
-$pdo = Database::getDatabaseConnection();
+$BansDataClass = new BansDataClass();
+[$isBanned, $message] = $BansDataClass->checkIfUserIsBanned($playerId);
 
-try {
-    $stmt = $pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
-    $stmt->execute([$playerId]);
-    $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if ($fetchedData) {
-        http_response_code(200);
-        echo json_encode(["success" => true, "response" => true, "message" => "Player is banned", "banDetails" => $fetchedData]);
-    } else {
-        http_response_code(200);
-        echo json_encode(["success" => true, "response" => false, "message" => "Player is not banned"]);
-    }
-
-    exit;
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Failed to check ban status for user: ' . $e->getMessage()]);
-    exit;
-}
+http_response_code(200);
+echo json_encode([
+    "success" => true,
+    "response" => $isBanned,
+    "message" => $message,
+]);
+exit;
 ?>
