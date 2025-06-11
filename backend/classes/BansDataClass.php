@@ -8,7 +8,9 @@ class BansDataClass {
         $this->pdo = Database::getDatabaseConnection();
     }
 
-    // TODO: API Currently using these separately, move everything under this class
+    // Setters
+
+    // Returns if player is banned or not
     public function checkIfUserIsBanned($playerID) {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM GameBans WHERE Player_ID = ?");
@@ -25,11 +27,16 @@ class BansDataClass {
         }
     }
 
+    // Attempts to set a ban for passed player
     public function addBanForUser($playerID, $moderatorID, $reason, $duration) {
         try {
             $this->pdo->beginTransaction();
 
-            $isBanned = $this->checkIfUserIsBanned($playerID);
+            $playerID = (int)$playerID;
+            $moderatorID = (int)$moderatorID;
+            $duration = (int)$duration;
+
+            [$isBanned] = $this->checkIfUserIsBanned($playerID);
             if ($isBanned) {
                 $this->pdo->rollBack();
                 return [false, "Player is already banned"];
@@ -46,6 +53,7 @@ class BansDataClass {
         }
     }
 
+    // Attempts to unset ban for the passed player
     public function removeBanForUser($playerID) {
          try {
             $this->pdo->beginTransaction();

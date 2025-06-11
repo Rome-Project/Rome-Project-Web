@@ -1,4 +1,27 @@
-<?php include_once 'components/require.php'; ?>
+<?php 
+include_once 'components/require.php'; 
+require_once WEB_ROOT . 'backend/classes/BansDataClass.php';
+
+$BanStatus = ['success' => false, 'message' => ''];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['player_id'], $_POST['reason'], $_POST['duration'])) {
+        $BanStatus['message'] = 'Missing required fields';
+    } elseif (!is_numeric($_POST['player_id']) || !is_numeric($_POST['duration'])) {
+        $BanStatus['message'] = 'Invalid player ID or duration';
+    } else {
+        $playerId = (int)$_POST['player_id'];
+        $reason = trim($_POST['reason']);
+        $duration = (int)$_POST['duration'];
+        $moderatorId = $UserClass->getUserID();
+
+        $BansDataClass = new BansDataClass();
+        [$success, $message] = $BansDataClass->addBanForUser($playerId, $moderatorId, $reason, $duration);
+        $BanStatus['success'] = $success;
+        $BanStatus['message'] = $message;
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +32,12 @@
 
     <div class="ban_container">
         <form class="ban_form" id="banForm" method="POST">
+            <?php if ($BanStatus['message']): ?>
+                <div <?php echo $BanStatus['success'] ? 'success' : 'error'; ?>">
+                    <?php echo htmlspecialchars($BanStatus['message']); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="ban_form_content">
                 <!-- Player ID -->
                 <div class="ban_form_group">
